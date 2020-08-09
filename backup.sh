@@ -1,7 +1,5 @@
 #!/bin/sh
 set -e
-gcloud_key_file=$(ls /var/run/secret/cloud.google.com/*.json)
-gcloud auth activate-service-account --key-file="$gcloud_key_file"
 mysql_defaults_file=$(mktemp)
 TMPDIR=$(mktemp -d)
 mkfifo -m 600 "$TMPDIR/fifo"
