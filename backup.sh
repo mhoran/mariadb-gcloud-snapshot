@@ -20,5 +20,5 @@ archives=`gcloud compute snapshots list \
   --format="table[no-heading](name)"`
 for archive in $archives
 do
-  gcloud compute snapshots delete $archive
+  gcloud -q compute snapshots delete $archive
 done
