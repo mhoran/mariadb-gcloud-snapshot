@@ -15,10 +15,10 @@ gcloud compute disks snapshot "$DISK_NAME" --zone=us-west2-b \
   --snapshot-names="mariadb-snapshot-$DATE"
 echo "BACKUP STAGE END;
 exit" > "$TMPDIR/fifo"
-archives=`gcloud compute snapshots list \
+archives=$(gcloud compute snapshots list \
   --filter="name~'mariadb-snapshot-' AND creationTimestamp<-P1W" \
-  --format="table[no-heading](name)"`
+  --format="table[no-heading](name)")
 for archive in $archives
 do
-  gcloud -q compute snapshots delete $archive
+  gcloud -q compute snapshots delete "$archive"
 done
