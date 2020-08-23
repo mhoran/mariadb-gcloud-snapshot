@@ -1,10 +1,11 @@
 #!/bin/sh
 set -e
+mysql_root_password=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
 mysql_defaults_file=$(mktemp)
 TMPDIR=$(mktemp -d)
 mkfifo -m 600 "$TMPDIR/fifo"
 echo "[client]
-password=$MYSQL_ROOT_PASSWORD" > "$mysql_defaults_file"
+password=$mysql_root_password" > "$mysql_defaults_file"
 mysql --defaults-file="$mysql_defaults_file" < "$TMPDIR/fifo" &
 exec 3> "$TMPDIR/fifo"
 echo "BACKUP STAGE START;
