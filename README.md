@@ -1,7 +1,7 @@
 mariadb-gcloud-snapshot
 =======================
 
-A script for backing up MariaDB using `BACKUP STAGE` and Google Cloud snapshots.
+A script for backing up MariaDB using [`BACKUP STAGE`](https://mariadb.com/kb/en/backup-stage/) and Google Cloud snapshots.
 
 Environment Variables
 ---------------------
