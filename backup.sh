@@ -1,20 +1,22 @@
 #!/bin/sh
 set -e
 
+TMPDIR=$(mktemp -d)
+
 mysql_root_password=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
-mysql_defaults_file=$(mktemp)
+mysql_defaults_file="$TMPDIR/my.cnf"
 echo "[client]
 password=$mysql_root_password" > "$mysql_defaults_file"
 
-fifo_tmpdir=$(mktemp -d)
-mkfifo -m 600 "$fifo_tmpdir/fifo"
+fifo_path="$TMPDIR/fifo"
+mkfifo -m 600 "$fifo_path"
 
-mysql --defaults-file="$mysql_defaults_file" < "$fifo_tmpdir/fifo" &
+mysql --defaults-file="$mysql_defaults_file" < "$fifo_path" &
 
 # keep the pipe open after we write to it
-exec 3> "$fifo_tmpdir/fifo"
+exec 3> "$fifo_path"
 echo "BACKUP STAGE START;
-BACKUP STAGE BLOCK_COMMIT;" > "$fifo_tmpdir/fifo"
+BACKUP STAGE BLOCK_COMMIT;" > "$fifo_path"
 
 format=%Y%m%d
 DATE=$(date +$format)
@@ -22,10 +24,7 @@ gcloud compute disks snapshot "$DISK_NAME" --zone="$DISK_ZONE" \
   --snapshot-names="mariadb-snapshot-$DATE"
 
 echo "BACKUP STAGE END;
-exit" > "$fifo_tmpdir/fifo"
-
-rm -r "$fifo_tmpdir"
-rm "$mysql_defaults_file"
+exit" > "$fifo_path"
 
 archives=$(gcloud compute snapshots list \
   --filter="name~'mariadb-snapshot-' AND creationTimestamp<-P1W" \
@@ -34,3 +33,5 @@ for archive in $archives
 do
   gcloud -q compute snapshots delete "$archive"
 done
+
+rm -r "$TMPDIR"
