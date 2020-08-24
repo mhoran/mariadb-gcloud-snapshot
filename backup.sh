@@ -18,7 +18,7 @@ BACKUP STAGE BLOCK_COMMIT;" > "$TMPDIR/fifo"
 
 format=%Y%m%d
 DATE=$(date +$format)
-gcloud compute disks snapshot "$DISK_NAME" \
+gcloud compute disks snapshot "$DISK_NAME" --zone="$DISK_ZONE" \
   --snapshot-names="mariadb-snapshot-$DATE"
 
 echo "BACKUP STAGE END;
