@@ -6,7 +6,8 @@ A script for backing up MariaDB using `BACKUP STAGE` and Google Cloud snapshots.
 Environment Variables
 ---------------------
 
-`MYSQL_ROOT_PASSWORD_FILE`: path to file containing the MariaDB root password.
+`MYSQL_ROOT_PASSWORD_FILE`: path to file containing the MariaDB root password.\
+`CLOUDSDK_COMPUTE_ZONE`: zone of the disks to operate on.
 
 Example Kubernetes Deployment
 -----------------------------
@@ -36,6 +37,8 @@ spec:
               value: <name-of-mysql-service>
             - name: MYSQL_ROOT_PASSWORD_FILE
               value: /var/run/secrets/mysql-root-password
+            - name: CLOUDSDK_COMPUTE_ZONE
+              value: us-west2-b
             image: matthoran/mariadb-gcloud-snapshot
             imagePullPolicy: Always
             name: mariadb-gcloud-snapshot
