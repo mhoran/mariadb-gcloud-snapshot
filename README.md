@@ -7,9 +7,9 @@ Environment Variables
 ---------------------
 
 `DISK_NAME`: name of disk to snapshot.\
+`DISK_ZONE`: zone of the disks to operate on.
 `MYSQL_HOST`: hostname of MariaDB server.\
 `MYSQL_ROOT_PASSWORD_FILE`: path to file containing the MariaDB root password.\
-`DISK_ZONE`: zone of the disks to operate on.
 
 Example Kubernetes Deployment
 -----------------------------
