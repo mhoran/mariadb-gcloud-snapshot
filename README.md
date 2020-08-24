@@ -6,6 +6,8 @@ A script for backing up MariaDB using [`BACKUP STAGE`](https://mariadb.com/kb/en
 Environment Variables
 ---------------------
 
+`DISK_NAME`: name of disk to snapshot.\
+`MYSQL_HOST`: hostname of MariaDB server.\
 `MYSQL_ROOT_PASSWORD_FILE`: path to file containing the MariaDB root password.\
 `DISK_ZONE`: zone of the disks to operate on.
 
