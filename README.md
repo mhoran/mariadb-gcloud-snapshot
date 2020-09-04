@@ -41,7 +41,7 @@ spec:
               value: /var/run/secrets/mysql-root-password
             - name: DISK_ZONE
               value: us-west2-b
-            image: matthoran/mariadb-gcloud-snapshot
+            image: ghcr.io/mhoran/mariadb-gcloud-snapshot
             imagePullPolicy: Always
             name: mariadb-gcloud-snapshot
             resources:
