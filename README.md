@@ -7,7 +7,8 @@ Environment Variables
 ---------------------
 
 `DISK_NAME`: name of disk to snapshot.\
-`DISK_ZONE`: zone of the disks to operate on.
+`DISK_ZONE`: zone of the disks to operate on.\
+`SNAPSHOT_PREFIX`: prefix for snapshot names, defaults to `mariadb-snapshot`.\
 `MYSQL_HOST`: hostname of MariaDB server.\
 `MYSQL_ROOT_PASSWORD_FILE`: path to file containing the MariaDB root password.\
 

@@ -2,6 +2,7 @@
 set -e
 
 TMPDIR=$(mktemp -d)
+SNAPSHOT_PREFIX=${SNAPSHOT_PREFIX:-mariadb-snapshot}
 
 mysql_root_password=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
 mysql_defaults_file="$TMPDIR/my.cnf"
@@ -21,13 +22,13 @@ BACKUP STAGE BLOCK_COMMIT;" > "$fifo_path"
 format=%Y%m%d
 DATE=$(date +$format)
 gcloud compute disks snapshot "$DISK_NAME" --zone="$DISK_ZONE" \
-  --snapshot-names="mariadb-snapshot-$DATE"
+  --snapshot-names="$SNAPSHOT_PREFIX-$DATE"
 
 echo "BACKUP STAGE END;
 exit" > "$fifo_path"
 
 archives=$(gcloud compute snapshots list \
-  --filter="name~'mariadb-snapshot-' AND creationTimestamp<-P1W" \
+  --filter="name~'$SNAPSHOT_PREFIX-' AND creationTimestamp<-P1W" \
   --format="table[no-heading](name)")
 for archive in $archives
 do
