@@ -19,8 +19,8 @@ mysql --defaults-file="$mysql_defaults_file" < "$sql_fifo" > "$out_fifo" &
 # keep the pipe open after we write to it
 exec 3> "$sql_fifo"
 echo "BACKUP STAGE START;
-BACKUP STAGE BLOCK_COMMIT;"
-echo "\\! echo backup_script_done;" > "$sql_fifo"
+BACKUP STAGE BLOCK_COMMIT;
+\\! echo backup_script_done;" > "$sql_fifo"
 
 # Block until the above commands are executed successfully
 grep -q "backup_script_done" < "$out_fifo"
