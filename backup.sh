@@ -20,6 +20,7 @@ exec 3> "$fifo_path"
 echo "BACKUP STAGE START;
 BACKUP STAGE BLOCK_COMMIT;" > "$fifo_path"
 
+sleep 1
 kill -0 $pid
 
 format=%Y%m%d
