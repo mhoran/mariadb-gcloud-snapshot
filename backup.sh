@@ -20,10 +20,10 @@ mysql --defaults-file="$mysql_defaults_file" < "$sql_fifo" > "$out_fifo" &
 exec 3> "$sql_fifo"
 echo "BACKUP STAGE START;
 BACKUP STAGE BLOCK_COMMIT;
-\\! echo backup_script_done;" > "$sql_fifo"
+\\! echo ready_to_snapshot;" > "$sql_fifo"
 
 # Block until the above commands are executed successfully
-grep -q "backup_script_done" < "$out_fifo"
+grep -q "ready_to_snapshot" < "$out_fifo"
 
 format=%Y%m%d
 DATE=$(date +$format)
