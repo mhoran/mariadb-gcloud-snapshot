@@ -9,19 +9,21 @@ mysql_defaults_file="$TMPDIR/my.cnf"
 echo "[client]
 password=$mysql_root_password" > "$mysql_defaults_file"
 
-fifo_path="$TMPDIR/fifo"
-mkfifo -m 600 "$fifo_path"
+sql_fifo="$TMPDIR/sql_fifo"
+mkfifo -m 600 "$sql_fifo"
+out_fifo="$TMPDIR/out_fifo"
+mkfifo -m 600 "$out_fifo"
 
-mysql --defaults-file="$mysql_defaults_file" < "$fifo_path" &
-pid=$!
+mysql --defaults-file="$mysql_defaults_file" < "$sql_fifo" > "$out_fifo" &
 
 # keep the pipe open after we write to it
-exec 3> "$fifo_path"
+exec 3> "$sql_fifo"
 echo "BACKUP STAGE START;
-BACKUP STAGE BLOCK_COMMIT;" > "$fifo_path"
+BACKUP STAGE BLOCK_COMMIT;"
+echo "\\! echo backup_script_done;" > "$sql_fifo"
 
-sleep 1
-kill -0 $pid
+# Block until the above commands are executed successfully
+grep -q "backup_script_done" < "$out_fifo"
 
 format=%Y%m%d
 DATE=$(date +$format)
@@ -29,7 +31,7 @@ gcloud compute disks snapshot "$DISK_NAME" --zone="$DISK_ZONE" \
   --snapshot-names="$SNAPSHOT_PREFIX-$DATE"
 
 echo "BACKUP STAGE END;
-exit" > "$fifo_path"
+exit" > "$sql_fifo"
 
 archives=$(gcloud compute snapshots list \
   --filter="name~'$SNAPSHOT_PREFIX-' AND creationTimestamp<-P1W" \
