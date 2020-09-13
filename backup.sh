@@ -13,11 +13,14 @@ fifo_path="$TMPDIR/fifo"
 mkfifo -m 600 "$fifo_path"
 
 mysql --defaults-file="$mysql_defaults_file" < "$fifo_path" &
+pid=$!
 
 # keep the pipe open after we write to it
 exec 3> "$fifo_path"
 echo "BACKUP STAGE START;
 BACKUP STAGE BLOCK_COMMIT;" > "$fifo_path"
+
+kill -0 $pid
 
 format=%Y%m%d
 DATE=$(date +$format)
