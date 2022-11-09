@@ -1,4 +1,4 @@
-FROM google/cloud-sdk:408.0.1-alpine@sha256:61ed9eaee69862f312e79ebeb7c0d61aa3b415c3e3cb7ab5d8b756f5c5d86902
+FROM google/cloud-sdk:409.0.0-alpine@sha256:b20cb23b303d3b3ebde15d3b8759beac6d8e9da8b49a1e189b7843130df264e4
 LABEL org.opencontainers.image.description="A script for backing up MariaDB using BACKUP STAGE and Google Cloud snapshots."
 RUN apk add --no-cache mysql-client
 COPY backup.sh /root/backup.sh
